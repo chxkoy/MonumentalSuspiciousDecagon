@@ -1,0 +1,50 @@
+[
+  {
+    "userid": "61557907624013",
+    "prefix": "",
+    "admin": [
+      ""
+    ],
+    "blacklist": [],
+    "enableCommands": [
+      {
+        "commands": [
+          "adc",
+          "ai",
+          "anime",
+          "ask",
+          "autoseen",
+          "besh",
+          "dictionary",
+          "emojimix",
+          "font",
+          "help",
+          "hercai",
+          "imgur2",
+          "insult",
+          "lyrics",
+          "music",
+          "out",
+          "pinterest",
+          "poli",
+          "quote",
+          "recipe",
+          "sim",
+          "teach",
+          "tid",
+          "trans",
+          "unsend",
+          "uptime",
+          "wanted"
+        ]
+      },
+      {
+        "handleEvent": [
+          "antiout",
+          "resend"
+        ]
+      }
+    ],
+    "time": 2996
+  }
+]

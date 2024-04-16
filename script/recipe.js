@@ -29,14 +29,14 @@ module.exports.run = async ({
       strYoutube: youtubeLink
     } = recipe;
     const recipeMessage = `
-        Title: ${title}
-        Category: ${category}
-        Area: ${area}
-        Instructions: ${instructions}
-        ${youtubeLink ? "YouTube Link: " + youtubeLink : ""}
+        » Title: ${title}
+        » Category: ${category}
+        » Area: ${area}
+        » Instructions: ${instructions}
+        ${youtubeLink ? "» YouTube Link: " + youtubeLink : ""}
         `;
     api.sendMessage(recipeMessage, threadID, messageID);
   } catch (error) {
-    api.sendMessage("Sorry, I couldn't fetch a recipe at the moment. Please try again later.", threadID);
+    api.sendMessage("[ ❌ ] » Sorry, I couldn't fetch a recipe at the moment. Please try again later.", threadID);
   }
 };

@@ -23,7 +23,7 @@ module.exports.run = async ({
       content,
       author
     } = response.data;
-    api.sendMessage(`"${content}" - ${author}`, threadID, messageID);
+    api.sendMessage(`“${content}” – ${author}`, threadID, messageID);
   } catch (error) {
     api.sendMessage("Sorry, I couldn't fetch a quote at the moment. Please try again later.", threadID, messageID);
   }

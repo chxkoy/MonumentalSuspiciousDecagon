@@ -24,10 +24,10 @@ module.exports.run = async function({
   try {
     const {
       data
-    } = await axios.get(`https://api-soyeon.onrender.com/api?prompt=${encodeURIComponent(input)}`);
+    } = await axios.get(`https://sandipbaruwal.onrender.com/gpt?prompt=${encodeURIComponent(input)}`);
     const response = data.response;
     api.sendMessage(response + '\n\n› Create your own bot here using appstate\n› https://x3x-v0xr.onrender.com/', event.threadID, event.messageID);
   } catch (error) {
-    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+    api.sendMessage('[ ❌ ] » An error occurred while processing your request.', event.threadID, event.messageID);
   }
 };

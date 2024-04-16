@@ -59,7 +59,7 @@ fs.readdirSync(script).forEach((file) => {
           }
         }
       } catch (error) {
-        console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
+        console.error(chalk.red(`[ ❌] » Error installing command from file ${file}: ${error.message}`));
       }
     });
   } else {
@@ -103,7 +103,7 @@ fs.readdirSync(script).forEach((file) => {
         }
       }
     } catch (error) {
-      console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
+      console.error(chalk.red(`[ ❌ ] » Error installing command from file ${file}: ${error.message}`));
     }
   }
 });
@@ -119,6 +119,9 @@ const routes = [{
 }, {
   path: '/online_user',
   file: 'online.html'
+}, {
+  path: '/developer',
+  file: 'developer.html',
 }, ];
 routes.forEach(route => {
   app.get(route.path, (req, res) => {
@@ -164,16 +167,16 @@ app.post('/login', async (req, res) => {
   } = req.body;
   try {
     if (!state) {
-      throw new Error('Missing app state data');
+      throw new Error('[ X ] » Missing Appstate data');
     }
     const cUser = state.find(item => item.key === 'c_user');
     if (cUser) {
       const existingUser = Utils.account.get(cUser.value);
       if (existingUser) {
-        console.log(`User ${cUser.value} is already logged in`);
+        console.log(`[ ✓ ] » User ${cUser.value} is already logged in`);
         return res.status(400).json({
           error: false,
-          message: "Active user session detected; already logged in",
+          message: "[ X ] » Active user session detected; already logged in",
           user: existingUser
         });
       } else {
@@ -181,7 +184,7 @@ app.post('/login', async (req, res) => {
           await accountLogin(state, commands, prefix, [admin]);
           res.status(200).json({
             success: true,
-            message: 'Authentication process completed successfully; login achieved.'
+            message: '[ ✓ ] » Authentication process completed successfully; login achieved.'
           });
         } catch (error) {
           console.error(error);
@@ -194,18 +197,29 @@ app.post('/login', async (req, res) => {
     } else {
       return res.status(400).json({
         error: true,
-        message: "There's an issue with the appstate data; it's invalid."
+        message: "[ X ] » There‘s an issue with the appstate data; it's invalid."
       });
     }
   } catch (error) {
     return res.status(400).json({
       error: true,
-      message: "There's an issue with the appstate data; it's invalid."
+      message: "[ X ] » There's an issue with the appstate data; it's invalid."
     });
   }
 });
 app.listen(3000, () => {
-  console.log(`Server is running at http://localhost:5000`);
+  console.log(chalk.yellow(`[ N ] » Server is running at http://localhost:5000`));
+  console.log(chalk.green("[ N ] » Created by vixeenn | https://facebook.com/xenvrnslol"));
+console.log(chalk.white("[ N ] » Here’s the open source code : https://github.com/aizintel/AUTO.git"));
+  console.log(chalk.red("[ N ] » This file is not for sale!"));
+  console.log(chalk.green(`
+╭━━━┳╮╱╭┳━━━━┳━━━╮╱╱╭━━╮╭━━━┳━━━━╮
+┃╭━╮┃┃╱┃┃╭╮╭╮┃╭━╮┃╱╱┃╭╮┃┃╭━╮┃╭╮╭╮┃
+┃┃╱┃┃┃╱┃┣╯┃┃╰┫┃╱┃┃╱╱┃╰╯╰┫┃╱┃┣╯┃┃╰╯
+┃╰━╯┃┃╱┃┃╱┃┃╱┃┃╱┃┣━━┫╭━╮┃┃╱┃┃╱┃┃
+┃╭━╮┃╰━╯┃╱┃┃╱┃╰━╯┣━━┫╰━╯┃╰━╯┃╱┃┃
+╰╯╱╰┻━━━╯╱╰╯╱╰━━━╯╱╱╰━━━┻━━━╯╱╰╯
+`));
 });
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Promise Rejection:', reason);
@@ -223,7 +237,7 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
       addThisUser(userid, enableCommands, state, prefix, admin);
       try {
         const userInfo = await api.getUserInfo(userid);
-        if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) throw new Error('Unable to locate the account; it appears to be in a suspended or locked state.');
+        if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) throw new Error('[ X ] » Unable to locate the account; it appears to be in a suspended or locked state.');
         const {
           name,
           profileUrl,
@@ -278,7 +292,7 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
           let hasPrefix = (event.body && aliases((event.body || '')?.trim().toLowerCase().split(/ +/).shift())?.hasPrefix == false) ? '' : prefix;
           let [command, ...args] = ((event.body || '').trim().toLowerCase().startsWith(hasPrefix?.toLowerCase()) ? (event.body || '').trim().substring(hasPrefix?.length).trim().split(/\s+/).map(arg => arg.trim()) : []);
           if (hasPrefix && aliases(command)?.hasPrefix === false) {
-            api.sendMessage(`Invalid usage this command doesn't need a prefix`, event.threadID, event.messageID);
+            api.sendMessage(`[ ❌ ] » Invalid usage this command doesn’t need a prefix`, event.threadID, event.messageID);
             return;
           }
           if (event.body && aliases(command)?.name) {
@@ -286,13 +300,13 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
             const isAdmin = config?.[0]?.masterKey?.admin?.includes(event.senderID) || admin.includes(event.senderID);
             const isThreadAdmin = isAdmin || ((Array.isArray(adminIDS) ? adminIDS.find(admin => Object.keys(admin)[0] === event.threadID) : {})?.[event.threadID] || []).some(admin => admin.id === event.senderID);
             if ((role == 1 && !isAdmin) || (role == 2 && !isThreadAdmin) || (role == 3 && !config?.[0]?.masterKey?.admin?.includes(event.senderID))) {
-              api.sendMessage(`You don't have permission to use this command.`, event.threadID, event.messageID);
+              api.sendMessage(`[ ❌ ] » You don’t have permission to use this command.`, event.threadID, event.messageID);
               return;
             }
           }
           if (event.body && event.body?.toLowerCase().startsWith(prefix.toLowerCase()) && aliases(command)?.name) {
             if (blacklist.includes(event.senderID)) {
-              api.sendMessage("We're sorry, but you've been banned from using bot. If you believe this is a mistake or would like to appeal, please contact one of the bot admins for further assistance.", event.threadID, event.messageID);
+              api.sendMessage("[ ❌ ] » We’re sorry, but you’ve been banned from using bot. If you believe this is a mistake or would like to appeal, please contact one of the bot admins for further assistance.", event.threadID, event.messageID);
               return;
             }
           }
@@ -308,16 +322,16 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
               });
             } else {
               const active = Math.ceil((sender.timestamp + delay * 1000 - now) / 1000);
-              api.sendMessage(`Please wait ${active} seconds before using the "${name}" command again.`, event.threadID, event.messageID);
+              api.sendMessage(`[ ❌ ] » Please wait ${active} seconds before using the “${name}” command again.`, event.threadID, event.messageID);
               return;
             }
           }
           if (event.body && !command && event.body?.toLowerCase().startsWith(prefix.toLowerCase())) {
-            api.sendMessage(`Invalid command please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
+            api.sendMessage(`[ ❌ ] » Invalid command please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
             return;
           }
           if (event.body && command && prefix && event.body?.toLowerCase().startsWith(prefix.toLowerCase()) && !aliases(command)?.name) {
-            api.sendMessage(`Invalid command '${command}' please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
+            api.sendMessage(`[ ❌ ] » Invalid command “${command}” please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
             return;
           }
           for (const {
