@@ -2,7 +2,7 @@ module.exports.config = {
   name: "out",
   version: "1.0.0",
   role: 2,
-  hasPrefix: true,
+  hasPrefix: false,
   credits: "Developer",
   description: "Bot leaves the thread",
   usages: "out",

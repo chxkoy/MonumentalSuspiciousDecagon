@@ -5,7 +5,7 @@ module.exports.config = {
   name: "tid",
   version: "1.0.0",
   role: 0,
-  hasPrefix: true,
+  hasPrefix: false,
   description: "Get thread ID and group image",
   usages: "tid",
   credits: "Developer",
@@ -28,7 +28,7 @@ module.exports.run = async function({
     if (imageSrc) {
       const callback = async function() {
         api.sendMessage({
-            body: `[ 🇳 ] » Thread ID: ${event.threadID}\n\n[ 🇳 ] » Group Thread Image:`,
+            body: `Thread ID: ${event.threadID}\n\nGroup Thread Image:`,
             attachment: fs.createReadStream(imagePath)
           }, event.threadID,
           () => {
@@ -37,7 +37,7 @@ module.exports.run = async function({
       };
       request(imageSrc).pipe(fs.createWriteStream(imagePath)).on('close', callback);
     } else {
-      api.sendMessage(`[ 🇳 ] » Thread ID: ${event.threadID}\n\n[ 🇳 ] » This thread does not have an image.`, event.threadID);
+      api.sendMessage(`Thread ID: ${event.threadID}\n\nThis thread does not have an image.`, event.threadID);
     }
   } catch (error) {
     api.sendMessage(error.message, event.threadID, event.messageID);
